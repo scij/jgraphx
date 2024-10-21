@@ -133,7 +133,7 @@ public class mxFastOrganicLayout extends mxGraphLayout
 	/**
 	 * Maps from vertices to indices.
 	 */
-	protected Hashtable<Object, Integer> indices = new Hashtable<Object, Integer>();
+	protected Hashtable<Object, Integer> indices = new Hashtable<>();
 
 	/**
 	 * Constructs a new fast organic layout for the specified graph.
@@ -360,7 +360,7 @@ public class mxFastOrganicLayout extends mxGraphLayout
 			cellLocation[i] = new double[2];
 
 			// Set up the mapping from array indices to cells
-			indices.put(vertex, new Integer(i));
+			indices.put(vertex, i);
 			mxRectangle bounds = getVertexBounds(vertex);
 
 			// Set the X,Y value of the internal version of the cell to
@@ -419,7 +419,7 @@ public class mxFastOrganicLayout extends mxGraphLayout
 					// acted on by this layout
 					if (index != null)
 					{
-						neighbours[i][j] = index.intValue();
+						neighbours[i][j] = index;
 					}
 
 					// Else if index of the other cell doesn't correspond to
@@ -478,20 +478,20 @@ public class mxFastOrganicLayout extends mxGraphLayout
 
 					if (minx == null)
 					{
-						minx = new Double(x);
+						minx = x;
 					}
 					else
 					{
-						minx = new Double(Math.min(minx.doubleValue(), x));
+						minx = Math.min(minx, x);
 					}
 
 					if (miny == null)
 					{
-						miny = new Double(y);
+						miny = y;
 					}
 					else
 					{
-						miny = new Double(Math.min(miny.doubleValue(), y));
+						miny = Math.min(miny, y);
 					}
 				}
 			}
@@ -499,8 +499,8 @@ public class mxFastOrganicLayout extends mxGraphLayout
 			// Modifies the cloned geometries in-place. Not needed
 			// to clone the geometries again as we're in the same
 			// undoable change.
-			double dx = (minx != null) ? -minx.doubleValue() - 1 : 0;
-			double dy = (miny != null) ? -miny.doubleValue() - 1 : 0;
+			double dx = (minx != null) ? -minx - 1 : 0;
+			double dy = (miny != null) ? -miny - 1 : 0;
 
 			if (initialBounds != null)
 			{

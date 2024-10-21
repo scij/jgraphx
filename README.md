@@ -1,5 +1,13 @@
-JGraphX
-=======
+# JGraphX
+
+## Read this first
+
+Forking this library because I want to generate Draw.IO-Files and this seems to be
+a reasonable implementation.
+
+- Updating to current Java and removing deprecated stuff
+
+## Original Readme from JGraph
 
 This project is end of life.
 

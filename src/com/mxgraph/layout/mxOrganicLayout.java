@@ -421,7 +421,7 @@ public class mxOrganicLayout extends mxGraphLayout
 		for (int i = 0; i < vertices.length; i++)
 		{
 			v[i] = new CellWrapper(vertices[i]);
-			vertexMap.put(vertices[i], new Integer(i));
+			vertexMap.put(vertices[i], i);
 			bounds = getVertexBounds(vertices[i]);
 			
 			if (totalBounds == null)
@@ -529,7 +529,7 @@ public class mxOrganicLayout extends mxGraphLayout
 			}
 			if (source != null)
 			{
-				e[i].source = source.intValue();
+				e[i].source = source;
 			}
 			else
 			{
@@ -538,7 +538,7 @@ public class mxOrganicLayout extends mxGraphLayout
 			}
 			if (target != null)
 			{
-				e[i].target = target.intValue();
+				e[i].target = target;
 			}
 			else
 			{
@@ -796,7 +796,7 @@ public class mxOrganicLayout extends mxGraphLayout
 
 		// This check is placed outside of the inner loop for speed, even
 		// though the code then has to be duplicated
-		if (isOptimizeNodeDistribution == true)
+		if (isOptimizeNodeDistribution)
 		{
 			if (approxNodeDimensions)
 			{
@@ -1201,7 +1201,7 @@ public class mxOrganicLayout extends mxGraphLayout
 			if (e[i].source != cellIndex && e[i].target != cellIndex)
 			{
 				// Add non-connected edges
-				relevantEdgeList.add(new Integer(i));
+				relevantEdgeList.add(i);
 			}
 		}
 
@@ -1236,7 +1236,7 @@ public class mxOrganicLayout extends mxGraphLayout
 			if (e[i].source == cellIndex || e[i].target == cellIndex)
 			{
 				// Add connected edges to list by their index number
-				connectedEdgeList.add(new Integer(i));
+				connectedEdgeList.add(i);
 			}
 		}
 
@@ -1248,7 +1248,7 @@ public class mxOrganicLayout extends mxGraphLayout
 		{
 			if (iter.hasNext())
 			{
-				connectedEdgeArray[i] = iter.next().intValue();
+				connectedEdgeArray[i] = iter.next();
 				;
 			}
 		}

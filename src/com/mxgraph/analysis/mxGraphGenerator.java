@@ -53,7 +53,7 @@ public class mxGraphGenerator
 
 	/**
 	 * @param aGraph 
-	 * @param numVertexes 
+	 * @param numVertices
 	 * @return a null graph
 	 */
 	public void getNullGraph(mxAnalysisGraph aGraph, int numVertices)
@@ -67,7 +67,7 @@ public class mxGraphGenerator
 
 		for (int i = 0; i < numVertices; i++)
 		{
-			graph.insertVertex(parent, null, new Integer(i).toString(), i * 50, 0, 25, 25);
+			graph.insertVertex(parent, null, Integer.toString(i), i * 50, 0, 25, 25);
 		}
 	};
 
@@ -89,7 +89,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), i * 50, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), i * 50, 0, 25, 25);
 		}
 
 		for (int i = 0; i < numVertices; i++)
@@ -128,7 +128,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		int vertexCount = 0;
@@ -209,7 +209,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		for (int i = 0; i < numVerticesGroup1; i++)
@@ -307,7 +307,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		for (int i = 0; i < numVerticesGroup1; i++)
@@ -342,7 +342,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		//now we set up the starting conditions
@@ -528,9 +528,9 @@ public class mxGraphGenerator
 	};
 
 	/**
-	 * @param xDim
-	 * @param yDim
-	 * @param weights
+	 * @param aGraph Graph being analyzed.
+	 * @param xDim horizontal dimension.
+	 * @param yDim vertical dimension.
 	 * Return a king graph of size <b>xDim</b> x <b>yDim</b>
 	 * Note that the minimum size is 4x4
 	 */
@@ -548,7 +548,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		//now we set up the starting conditions
@@ -691,7 +691,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < 10; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		graph.insertEdge(parent, null, getNewEdgeValue(aGraph), vertices[0], vertices[2]);
@@ -729,7 +729,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		for (int i = 0; i < numVertices - 1; i++)
@@ -785,7 +785,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		int numVertexesInPerimeter = numVertices - 1;
@@ -858,7 +858,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numVertices; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		int numVerticesInPerimeter = numVertices - 1;
@@ -901,12 +901,12 @@ public class mxGraphGenerator
 		{
 			for (int j = 0; j < branchSize; j++)
 			{
-				vertices[vertexCount] = graph.insertVertex(parent, null, new Integer(vertexCount).toString(), 0, 0, 25, 25);
+				vertices[vertexCount] = graph.insertVertex(parent, null, Integer.toString(vertexCount), 0, 0, 25, 25);
 				vertexCount++;
 			}
 		}
 
-		vertices[numVertices - 1] = graph.insertVertex(parent, null, new Integer(numVertices - 1).toString(), 0, 0, 25, 25);
+		vertices[numVertices - 1] = graph.insertVertex(parent, null, Integer.toString(numVertices - 1), 0, 0, 25, 25);
 
 		//make the connections
 		for (int i = 0; i < numBranches; i++)
@@ -949,12 +949,12 @@ public class mxGraphGenerator
 		{
 			for (int j = 0; j < branchSize; j++)
 			{
-				vertices[vertexCount] = graph.insertVertex(parent, null, new Integer(vertexCount).toString(), 0, 0, 25, 25);
+				vertices[vertexCount] = graph.insertVertex(parent, null, Integer.toString(vertexCount), 0, 0, 25, 25);
 				vertexCount++;
 			}
 		}
 
-		vertices[numVertices - 1] = graph.insertVertex(parent, null, new Integer(numVertices - 1).toString(), 0, 0, 25, 25);
+		vertices[numVertices - 1] = graph.insertVertex(parent, null, Integer.toString(numVertices - 1), 0, 0, 25, 25);
 		Object centerVertex = vertices[numVertices - 1];
 
 		//make the connections
@@ -1070,8 +1070,8 @@ public class mxGraphGenerator
 
 	/**
 	 * A helper function that calculates the ring size for a windmill graph, based on the index of a vertex in a brach and branch size. - for internal use
-	 * @param currVertex - starting from 1
-	 * @param branchSize - starting from 1
+	 * @param currIndex - starting from 1.
+	 * @param branchSize - starting from 1.
 	 * @param fullSize
 	 * @return ring size
 	 */
@@ -1118,7 +1118,7 @@ public class mxGraphGenerator
 		
 		for (int i = 0; i < numNodes; i++)
 		{
-			vertices[i] = graph.insertVertex(parent, null, new Integer(i).toString(), 0, 0, 25, 25);
+			vertices[i] = graph.insertVertex(parent, null, Integer.toString(i), 0, 0, 25, 25);
 		}
 
 		for (int i = 0; i < numEdges; i++)
@@ -1249,7 +1249,7 @@ public class mxGraphGenerator
 	};
 
 	/**
-	 * @param graph
+	 * @param aGraph
 	 * @param forceConnected if true, an unconnected graph is made connected
 	 * @param forceSimple if true, a non-simple graph is made simple
 	 * Calculates one spanning tree of graph, which doesn't have to be but can be minimal
@@ -1329,7 +1329,7 @@ public class mxGraphGenerator
 
 		for (int i = 0; i < vertexNum; i++)
 		{
-			graph.insertVertex(parent, null, new Integer(vertexCount).toString(), 0, 0, 25, 25);
+			graph.insertVertex(parent, null, Integer.toString(vertexCount), 0, 0, 25, 25);
 			vertexCount++;
 		}
 

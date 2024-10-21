@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -68,14 +69,13 @@ public class mxUtils
 	/**
 	 * True if the machine is a Mac.
 	 */
-	public static boolean IS_MAC = System.getProperty("os.name").toLowerCase()
-			.indexOf("mac") >= 0;
+	public static boolean IS_MAC = System.getProperty("os.name").toLowerCase().contains("mac");
 
 	/**
 	 * True if the machine is running a linux kernel.
 	 */
 	public static boolean IS_LINUX = System.getProperty("os.name")
-			.toLowerCase().indexOf("linux") >= 0;
+            .toLowerCase().contains("linux");
 
 	/**
 	 * Static Graphics used for Font Metrics.
@@ -379,25 +379,21 @@ public class mxUtils
 		}
 		else
 		{
-			for (int i = 0; i < lines.length; i++)
-			{
-				Rectangle2D bounds = font.getStringBounds(lines[i], frc);
+            for (String line : lines) {
+                Rectangle2D bounds = font.getStringBounds(line, frc);
 
-				if (boundingBox == null)
-				{
-					boundingBox = bounds;
-				}
-				else
-				{
-					boundingBox
-							.setFrame(
-									0,
-									0,
-									Math.max(boundingBox.getWidth(),
-											bounds.getWidth()),
-									boundingBox.getHeight() + lineHeight);
-				}
-			}
+                if (boundingBox == null) {
+                    boundingBox = bounds;
+                } else {
+                    boundingBox
+                            .setFrame(
+                                    0,
+                                    0,
+                                    Math.max(boundingBox.getWidth(),
+                                            bounds.getWidth()),
+                                    boundingBox.getHeight() + lineHeight);
+                }
+            }
 		}
 
 		return new mxRectangle(boundingBox);
@@ -419,152 +415,132 @@ public class mxUtils
 		// newlines. We want the result to retain all newlines in position.
 		String[] lines = text.split("\n");
 
-		for (int i = 0; i < lines.length; i++)
-		{
-			int lineWidth = 0; // the display width of the current line
-			int charCount = 0; // keeps count of current position in the line
-			StringBuilder currentLine = new StringBuilder();
+        for (String line : lines) {
+            int lineWidth = 0; // the display width of the current line
+            int charCount = 0; // keeps count of current position in the line
+            StringBuilder currentLine = new StringBuilder();
 
-			// Split the words of the current line by spaces and tabs
-			// The words are trimmed of tabs, space and newlines, therefore
-			String[] words = lines[i].split("\\s+");
+            // Split the words of the current line by spaces and tabs
+            // The words are trimmed of tabs, space and newlines, therefore
+            String[] words = line.split("\\s+");
 
-			// Need to a form a stack of the words in reverse order
-			// This is because if a word is split during the process 
-			// the remainder of the word is added to the front of the 
-			// stack and processed next
-			Stack<String> wordStack = new Stack<String>();
+            // Need to a form a stack of the words in reverse order
+            // This is because if a word is split during the process
+            // the remainder of the word is added to the front of the
+            // stack and processed next
+            Stack<String> wordStack = new Stack<String>();
 
-			for (int j = words.length - 1; j >= 0; j--)
-			{
-				wordStack.push(words[j]);
-			}
+            for (int j = words.length - 1; j >= 0; j--) {
+                wordStack.push(words[j]);
+            }
 
-			while (!wordStack.isEmpty())
-			{
-				String word = wordStack.pop();
+            while (!wordStack.isEmpty()) {
+                String word = wordStack.pop();
 
-				// Work out what whitespace exists before this word.
-				// and add the width of the whitespace to the calculation
-				int whitespaceCount = 0;
+                // Work out what whitespace exists before this word.
+                // and add the width of the whitespace to the calculation
+                int whitespaceCount = 0;
 
-				if (word.length() > 0)
-				{
-					// Concatenate any preceding whitespace to the
-					// word and calculate the number of characters of that
-					// whitespace
-					char firstWordLetter = word.charAt(0);
-					int letterIndex = lines[i].indexOf(firstWordLetter,
-							charCount);
-					String whitespace = lines[i].substring(charCount,
-							letterIndex);
-					whitespaceCount = whitespace.length();
-					word = whitespace.concat(word);
-				}
+                if (!word.isEmpty()) {
+                    // Concatenate any preceding whitespace to the
+                    // word and calculate the number of characters of that
+                    // whitespace
+                    char firstWordLetter = word.charAt(0);
+                    int letterIndex = line.indexOf(firstWordLetter,
+                            charCount);
+                    String whitespace = line.substring(charCount,
+                            letterIndex);
+                    whitespaceCount = whitespace.length();
+                    word = whitespace.concat(word);
+                }
 
-				double wordLength;
+                double wordLength;
 
-				// If the line width is zero, we are at the start of a newline
-				// We don't proceed preceeding whitespace in the width
-				// calculation
-				if (lineWidth > 0)
-				{
-					wordLength = metrics.stringWidth(word);
-				}
-				else
-				{
-					wordLength = metrics.stringWidth(word.trim());
-				}
+                // If the line width is zero, we are at the start of a newline
+                // We don't proceed preceeding whitespace in the width
+                // calculation
+                if (lineWidth > 0) {
+                    wordLength = metrics.stringWidth(word);
+                } else {
+                    wordLength = metrics.stringWidth(word.trim());
+                }
 
-				// Does the width of line so far plus the width of the 
-				// current word exceed the allowed width?
-				if (lineWidth + wordLength > width)
-				{
-					if (lineWidth > 0)
-					{
-						// There is already at least one word on this line
-						// and the current word takes the overall width over
-						// the allowed width. Because there is something on
-						// the line, complete the current line, reset the width
-						// counter, create a new line and put the current word
-						// back on the stack for processing in the next round
-						result.add(currentLine.toString());
-						currentLine = new StringBuilder();
-						wordStack.push(word.trim());
-						lineWidth = 0;
-					}
-					else if (mxConstants.SPLIT_WORDS)
-					{
-						// There are no words on the current line and the 
-						// current word does not fit on it. Find the maximum
-						// number of characters of this word that just fit
-						// in the available width
-						word = word.trim();
+                // Does the width of line so far plus the width of the
+                // current word exceed the allowed width?
+                if (lineWidth + wordLength > width) {
+                    if (lineWidth > 0) {
+                        // There is already at least one word on this line
+                        // and the current word takes the overall width over
+                        // the allowed width. Because there is something on
+                        // the line, complete the current line, reset the width
+                        // counter, create a new line and put the current word
+                        // back on the stack for processing in the next round
+                        result.add(currentLine.toString());
+                        currentLine = new StringBuilder();
+                        wordStack.push(word.trim());
+                        lineWidth = 0;
+                    } else if (mxConstants.SPLIT_WORDS) {
+                        // There are no words on the current line and the
+                        // current word does not fit on it. Find the maximum
+                        // number of characters of this word that just fit
+                        // in the available width
+                        word = word.trim();
 
-						for (int j = 1; j <= word.length(); j++)
-						{
-							wordLength = metrics.stringWidth(word.substring(0,
-									j));
+                        for (int j = 1; j <= word.length(); j++) {
+                            wordLength = metrics.stringWidth(word.substring(0,
+                                    j));
 
-							if (lineWidth + wordLength > width)
-							{
-								// The last character took us over the allowed
-								// width, deducted it unless there is only one
-								// character, in which case we have to use it
-								// since we can't split it...
-								j = j > 1 ? j - 1 : j;
-								String chars = word.substring(0, j);
-								currentLine = currentLine.append(chars);
-								// Return the unprocessed part of the word 
-								// to the stack
-								wordStack
-										.push(word.substring(j, word.length()));
-								result.add(currentLine.toString());
-								currentLine = new StringBuilder();
-								lineWidth = 0;
-								// Increment char counter allowing for white 
-								// space in the original word
-								charCount = charCount + chars.length()
-										+ whitespaceCount;
-								break;
-							}
-						}
-					}
-					else
-					{
-						// There are no words on the current line, but
-						// we are not splitting.
-						word = word.trim();
-						result.add(word);
-						currentLine = new StringBuilder();
-						lineWidth = 0;
-						// Increment char counter allowing for white 
-						// space in the original word
-						charCount = word.length() + whitespaceCount;
-					}
-				}
-				else
-				{
-					// The current word does not take the total line width
-					// over the allowed width. Append the word, removing
-					// preceeding whitespace if it is the first word in the
-					// line.
-					if (lineWidth > 0)
-					{
-						currentLine = currentLine.append(word);
-					}
-					else
-					{
-						currentLine = currentLine.append(word.trim());
-					}
+                            if (lineWidth + wordLength > width) {
+                                // The last character took us over the allowed
+                                // width, deducted it unless there is only one
+                                // character, in which case we have to use it
+                                // since we can't split it...
+                                j = j > 1 ? j - 1 : j;
+                                String chars = word.substring(0, j);
+                                currentLine = currentLine.append(chars);
+                                // Return the unprocessed part of the word
+                                // to the stack
+                                wordStack
+                                        .push(word.substring(j, word.length()));
+                                result.add(currentLine.toString());
+                                currentLine = new StringBuilder();
+                                lineWidth = 0;
+                                // Increment char counter allowing for white
+                                // space in the original word
+                                charCount = charCount + chars.length()
+                                        + whitespaceCount;
+                                break;
+                            }
+                        }
+                    } else {
+                        // There are no words on the current line, but
+                        // we are not splitting.
+                        word = word.trim();
+                        result.add(word);
+                        currentLine = new StringBuilder();
+                        lineWidth = 0;
+                        // Increment char counter allowing for white
+                        // space in the original word
+                        charCount = word.length() + whitespaceCount;
+                    }
+                } else {
+                    // The current word does not take the total line width
+                    // over the allowed width. Append the word, removing
+                    // preceeding whitespace if it is the first word in the
+                    // line.
+                    if (lineWidth > 0) {
+                        currentLine = currentLine.append(word);
+                    } else {
+                        currentLine = currentLine.append(word.trim());
+                    }
 
-					lineWidth += wordLength;
-					charCount += word.length();
-				}
-			}
+                    lineWidth += wordLength;
+                    charCount += word.length();
+                }
+            }
 
-			result.add(currentLine.toString());
-		}
+            result.add(currentLine.toString());
+        }
 
 		return result.toArray(new String[result.size()]);
 	}
@@ -1154,6 +1130,7 @@ public class mxUtils
 	 * @return Returns the stylename from the given formatted string.
 	 * @deprecated Use <code>mxStyleUtils.getStylename(String)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static String getStylename(String style)
 	{
 		return mxStyleUtils.getStylename(style);
@@ -1168,6 +1145,7 @@ public class mxUtils
 	 * @return Returns the stylename from the given formatted string.
 	 * @deprecated Use <code>mxStyleUtils.getStylenames(String)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static String[] getStylenames(String style)
 	{
 		return mxStyleUtils.getStylenames(style);
@@ -1179,6 +1157,7 @@ public class mxUtils
 	 * style, otherwise it returns the index of the first character.
 	 * @deprecated Use <code>mxStyleUtils.indexOfStylename(String, String)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static int indexOfStylename(String style, String stylename)
 	{
 		return mxStyleUtils.indexOfStylename(style, stylename);
@@ -1189,6 +1168,7 @@ public class mxUtils
 	 * style.
 	 * @deprecated Use <code>mxStyleUtils.removeAllStylenames(String)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static String removeAllStylenames(String style)
 	{
 		return mxStyleUtils.removeAllStylenames(style);
@@ -1208,6 +1188,7 @@ public class mxUtils
 	 *            New value for the given key.
 	 * @deprecated Use <code>mxStyleUtils.setCellStyles(mxIGraphModel, Object[], String, String)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static void setCellStyles(mxIGraphModel model, Object[] cells,
 			String key, String value)
 	{
@@ -1228,6 +1209,7 @@ public class mxUtils
 	 * @return Returns the new style.
 	 * @deprecated Use <code>mxStyleUtils.setStyle(String, String, String)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static String setStyle(String style, String key, String value)
 	{
 		return mxStyleUtils.setStyle(style, key, value);
@@ -1258,6 +1240,7 @@ public class mxUtils
 	 *            Optional boolean value for the flag.
 	 * @deprecated Use <code>mxStyleUtils.setCellStyleFlags(mxIGraphModel, Object[],String, int, Boolean)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static void setCellStyleFlags(mxIGraphModel model, Object[] cells,
 			String key, int flag, Boolean value)
 	{
@@ -1278,6 +1261,7 @@ public class mxUtils
 	 *            Optional boolean value for the given flag.
 	 * @deprecated Use <code>mxStyleUtils.setStyleFlag(String, String, int, Boolean)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static String setStyleFlag(String style, String key, int flag,
 			Boolean value)
 	{
@@ -1794,10 +1778,9 @@ public class mxUtils
 	}
 
 	/**
-	 * Reads the given filename into a string.
+	 * Reads the given input stream into a string.
 	 * 
-	 * @param filename
-	 *            Name of the file to be read.
+	 * @param stream Input stream to be read.
 	 * @return Returns a string representing the file contents.
 	 * @throws IOException
 	 */
@@ -1856,7 +1839,7 @@ public class mxUtils
 
 			for (int i = 0; i < digest.length; i++)
 			{
-				f.format("%02x", new Object[] { new Byte(digest[i]) });
+				f.format("%02x", new Object[] { digest[i] });
 			}
 			
 			f.close();
@@ -2028,7 +2011,7 @@ public class mxUtils
 
 				try
 				{
-					realUrl = new URL(url);
+					realUrl = new URI(url).toURL();
 				}
 				catch (Exception e)
 				{
@@ -2146,6 +2129,7 @@ public class mxUtils
 	 * @return Returns a new DOM document.
 	 * @deprecated Use <code>mxDomUtils.createDocument</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static Document createDocument()
 	{
 		return mxDomUtils.createDocument();
@@ -2155,6 +2139,7 @@ public class mxUtils
 	 * Creates a new SVG document for the given width and height.
 	 * @deprecated Use <code>mxDomUtils.createSvgDocument(int, int)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static Document createSvgDocument(int width, int height)
 	{
 		return mxDomUtils.createSvgDocument(width, height);
@@ -2164,6 +2149,7 @@ public class mxUtils
 	 * 
 	 * @deprecated Use <code>mxDomUtils.createVmlDocument</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static Document createVmlDocument()
 	{
 		return mxDomUtils.createVmlDocument();
@@ -2173,6 +2159,7 @@ public class mxUtils
 	 * Returns a document with a HTML node containing a HEAD and BODY node.
 	 * @deprecated Use <code>mxDomUtils.createHtmlDocument</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static Document createHtmlDocument()
 	{
 		return mxDomUtils.createHtmlDocument();
@@ -2416,6 +2403,7 @@ public class mxUtils
 	 * @return Returns a new XML document.
 	 * @deprecated Use <code>mxXmlUtils.parseXml</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static Document parseXml(String xml)
 	{
 		return mxXmlUtils.parseXml(xml);
@@ -2502,6 +2490,7 @@ public class mxUtils
 	 * @return Returns an XML string.
 	 * @deprecated Use <code>mxXmlUtils.getXml(Node)</code> (Jan 2012)
 	 */
+	@Deprecated
 	public static String getXml(Node node)
 	{
 		return mxXmlUtils.getXml(node);
