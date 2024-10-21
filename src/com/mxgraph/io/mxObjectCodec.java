@@ -3,10 +3,7 @@
  */
 package com.mxgraph.io;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,7 +196,7 @@ public class mxObjectCodec
 			}
 			else
 			{
-				obj = template.getClass().newInstance();
+				obj = template.getClass().getDeclaredConstructor().newInstance();
 			}
 
 			// Special case: Check if the collection
@@ -226,16 +223,15 @@ public class mxObjectCodec
 				}
 			}
 		}
-		catch (InstantiationException e)
+		catch (InstantiationException | IllegalAccessException e)
 		{
 			log.log(Level.FINEST, "Failed to clone the template", e);
 		}
-		catch (IllegalAccessException e)
-		{
-			log.log(Level.FINEST, "Failed to clone the template", e);
-		}
+		catch (InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
 
-		return obj;
+        return obj;
 	}
 
 	/**

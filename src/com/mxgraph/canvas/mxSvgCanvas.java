@@ -8,6 +8,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
@@ -280,7 +281,7 @@ public class mxSvgCanvas extends mxBasicCanvas
 
 		try
 		{
-			stream = new BufferedInputStream(new URL(src).openStream());
+			stream = new BufferedInputStream(new URI(src).toURL().openStream());
 		}
 		catch (Exception e1)
 		{
