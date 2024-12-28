@@ -3,17 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mxgraph</groupId>
     <artifactId>jgraphx</artifactId>
-    <version>4.2.2</version>
+    <version>4.2.3</version>
     <packaging>jar</packaging>
 
     <url>http://www.jgraph.com</url>
 
     <properties>
-
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
     </dependencies>
 
@@ -52,11 +52,18 @@
                 </executions>
                 <configuration>
                     <instructions>
-                        <Bundle-Vendor>see https://github.com/jgraph/jgraphx)</Bundle-Vendor>
+                        <Bundle-Vendor>see https://github.com/jgraph/jgraphx</Bundle-Vendor>
                         <Automatic-Module-Name>com.mxgraph.jgraphx</Automatic-Module-Name>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>Github package registry</name>
+            <url>https://maven.pkg.github.com/scij/jgraphx</url>
+        </repository>
+    </distributionManagement>
 </project>
